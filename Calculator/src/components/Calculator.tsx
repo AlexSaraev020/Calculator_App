@@ -1,55 +1,50 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { TopBar } from "./phoneComponents/TopBar"
+import { buttons } from "./types"
 
 export const Calculator = () => {
     const [value, setValue] = useState<string>('0')
-    const buttons = [
-        { id: 1, symbol: 'AC', className: 'bg-gray-500 w-16 h-16' },
-        { id: 2, symbol: '+/-', className: 'bg-gray-500 w-16 h-16' },
-        { id: 3, symbol: '%', className: 'bg-gray-500 w-16 h-16' },
-        { id: 4, symbol: '÷', className: 'bg-orange-500 w-16 h-16' },
-        { id: 5, symbol: '7', className: 'bg-zinc-900 w-16 h-16' },
-        { id: 6, symbol: '8', className: 'bg-zinc-900 w-16 h-16' },
-        { id: 7, symbol: '9', className: 'bg-zinc-900 w-16 h-16' },
-        { id: 8, symbol: 'X', className: 'bg-orange-500 w-16 h-16' },
-        { id: 9, symbol: '4', className: 'bg-zinc-900 w-16 h-16' },
-        { id: 10, symbol: '5', className: 'bg-zinc-900 w-16 h-16' },
-        { id: 11, symbol: '6', className: 'bg-zinc-900 w-16 h-16' },
-        { id: 12, symbol: '-', className: 'bg-orange-500 w-16 h-16' },
-        { id: 13, symbol: '1', className: 'bg-zinc-900 w-16 h-16' },
-        { id: 14, symbol: '2', className: 'bg-zinc-900 w-16 h-16' },
-        { id: 15, symbol: '3', className: 'bg-zinc-900 w-16 h-16' },
-        { id: 16, symbol: '+', className: 'bg-orange-500 w-16 h-16' },
-        { id: 17, symbol: '0', className: 'bg-zinc-900 w-36 h-16 col-span-2 flex justify-start' },
-        { id: 18, symbol: '.', className: 'bg-orange-500 w-16 h-16' },
-        { id: 19, symbol: '=', className: 'bg-orange-500 w-16 h-16' },
-    ]
+    const operations: string[] = ['%', '÷', 'X', '-', '+', '.']
 
     const handleCalculator = (symbol: string) => {
         if (symbol === 'AC') {
-            setValue('0')
-        } else if (symbol === '+/-') {
-            console.log('fasdas')
-        } else if (symbol === '%') {
-            setValue(value + symbol)
-        } else if (symbol === '÷') {
-            setValue(value + symbol)
-        } else if (symbol === 'X') {
-            setValue(value + symbol)
-        } else if (symbol === '-') {
-            setValue(value + symbol)
-        } else if (symbol === '+') {
-            setValue(value + symbol)
-        } else if (symbol === ',') {
-            setValue(value + symbol)
+            setValue('0');
+        } else if (symbol === 'DC') {
+            setValue(value.slice(0, -1));
+        } else if (operations.includes(symbol)) {
+            setValue((prevValue) => {
+                const lastChar = prevValue.slice(-1);
+                if (prevValue === '0' && symbol === '-') {
+                    return '-';
+                }
+                if (operations.includes(symbol)) {
+                    if (operations.includes(lastChar) && lastChar !== symbol ) {
+                        if(lastChar !== ''){
+                            return '0'
+                        }
+                        console.log('a fost apelat')
+                        return prevValue.slice(0, -1) + symbol;
+                    }
+
+                    if (!operations.includes(lastChar)) {
+                        return prevValue + symbol;
+                    }
+                }
+                return prevValue;
+            });
         } else if (symbol === '=') {
-            setValue(eval(value.replace('X', '*').replace('÷', '/')))
+            const result = eval(value.replace('X', '*').replace('÷', '/'));
+            setValue(String(result));
         } else {
             setValue((prevValue) =>
                 prevValue === '0' && symbol !== '.' ? symbol : prevValue + symbol
-            )
+            );
         }
     }
+
+    useEffect(() => {
+        console.log(value);
+    }, [value])
 
     return (
         <div className='w-full h-full flex items-center justify-center animate-fadeIn transition-all duration-500 '>
