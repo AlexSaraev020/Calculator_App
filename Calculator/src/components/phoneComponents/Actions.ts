@@ -1,12 +1,13 @@
 interface CalculatorProps {
     value: string;
-    symbol: string;
+    symbol: string | undefined;
     setValue: (value: string | ((prevValue: string) => string)) => void;
 }
 
-const operations: string[] = ['%', '÷', '**', 'X', '-', '+', '.']
+const operations: string[] = ['%', '÷', '**', 'X', '-', '+', '.', '(', ')','/']
 
 export const calculatorFunctionalities = ({ setValue, symbol, value }: CalculatorProps) => {
+    if (!symbol) return;
     if (symbol === 'AC') {
         setValue('0');
     } else if (symbol === 'DC') {
@@ -18,7 +19,7 @@ export const calculatorFunctionalities = ({ setValue, symbol, value }: Calculato
             if (prevValue === '0' && symbol === '-') {
                 return '-';
             }
-            if(symbol === '**'){
+            if (symbol === '**') {
                 if (lastTwoChars === '**') {
                     return prevValue;
                 }
@@ -28,9 +29,19 @@ export const calculatorFunctionalities = ({ setValue, symbol, value }: Calculato
                 return prevValue + symbol;
             }
             if (operations.includes(lastChar)) {
-                console.log('a fost apelat')
+                if (lastChar === '(') {
+                    return prevValue.slice(0, -1)
+                }
                 return prevValue.slice(0, -1) + symbol;
             }
+            if (prevValue === '0' && (symbol === '(' || symbol === ')')) {
+                return '0'
+            }
+
+            if (!prevValue.includes('(') && symbol === ')') {
+                return prevValue
+            }
+
             return prevValue + symbol;
         });
     } else if (symbol === '√') {
@@ -47,8 +58,13 @@ export const calculatorFunctionalities = ({ setValue, symbol, value }: Calculato
             }
         })
     } else if (symbol === '=') {
-        const result = eval(value.replace('X', '*').replace('÷', '/'));
-        setValue(String(result));
+        try {
+            const result = eval(value.replace('X', '*').replace('÷', '/'));
+            setValue(String(result));
+        } catch (error) {
+            console.error(error);
+            setValue('Error')
+        }
     } else {
         setValue((prevValue: string) =>
             prevValue === '0' && symbol !== '.' ? symbol : prevValue + symbol

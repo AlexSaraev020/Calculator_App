@@ -40,9 +40,16 @@ export default {
         blink: 'blink 0.5s infinite both',
       },
       colors: {
-        'darkGray': {
-          500: '#282C36',
-          600: '#21242C'
+        'darkBlue': {
+          500: '#12171c',
+          600: '#0b1017',
+          700: '#10151a'
+        },
+        'skinPink': {
+          500: '#FE88D0'
+        },
+        'cyanGreen': {
+          500: '#28FCD7'
         },
       },
     },
