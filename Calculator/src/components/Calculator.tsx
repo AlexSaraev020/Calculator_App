@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { TopBar } from "./phoneComponents/TopBar"
 import { buttonsCreate } from "./types"
 import { calculatorFunctionalities } from "./phoneComponents/Actions"
@@ -9,11 +9,6 @@ export const Calculator = () => {
     const handleCalculate = (symbol: string | undefined) => {
         calculatorFunctionalities({ value, setValue, symbol })
     }
-
-    useEffect(() => {
-        console.log(value);
-    }, [value])
-
 
     const buttons = buttonsCreate(rotate, setRotate)
 

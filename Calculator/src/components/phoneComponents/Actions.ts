@@ -4,7 +4,7 @@ interface CalculatorProps {
     setValue: (value: string | ((prevValue: string) => string)) => void;
 }
 
-const operations: string[] = ['%', '÷', '**', 'X', '-', '+', '.', '(', ')','/']
+const operations: string[] = ['%', '÷', '**', 'X', '-', '+', '.', '/']
 
 export const calculatorFunctionalities = ({ setValue, symbol, value }: CalculatorProps) => {
     if (!symbol) return;
@@ -17,6 +17,7 @@ export const calculatorFunctionalities = ({ setValue, symbol, value }: Calculato
             const lastChar = prevValue.slice(-1);
             const lastTwoChars = prevValue.slice(-2)
             if (prevValue === '0' && symbol === '-') {
+
                 return '-';
             }
             if (symbol === '**') {
@@ -28,20 +29,10 @@ export const calculatorFunctionalities = ({ setValue, symbol, value }: Calculato
                 }
                 return prevValue + symbol;
             }
+
             if (operations.includes(lastChar)) {
-                if (lastChar === '(') {
-                    return prevValue.slice(0, -1)
-                }
                 return prevValue.slice(0, -1) + symbol;
             }
-            if (prevValue === '0' && (symbol === '(' || symbol === ')')) {
-                return '0'
-            }
-
-            if (!prevValue.includes('(') && symbol === ')') {
-                return prevValue
-            }
-
             return prevValue + symbol;
         });
     } else if (symbol === '√') {
@@ -56,6 +47,36 @@ export const calculatorFunctionalities = ({ setValue, symbol, value }: Calculato
                 console.error('Error calculating square root:', error);
                 return 'Error';
             }
+        })
+    } else if (symbol === '(' || symbol === ')') {
+        setValue((prevValue: string) => {
+            const lastChar = prevValue.slice(-1)
+            if (symbol === '(') {
+                const indexOfPrev = prevValue.indexOf('(') - 1
+                const valueOfIndexOfPrev = prevValue.charAt(indexOfPrev)
+
+                if (!operations.includes(valueOfIndexOfPrev)) {
+                    return prevValue + 'X' + '(';
+                }
+                console.log(prevValue)
+                return prevValue + symbol;
+            }
+
+            if (symbol === ')') {
+                if (lastChar === '(' && symbol === ')') {
+                    return prevValue
+                } else if (lastChar === '(' && symbol !== ')') {
+                    return prevValue.slice(0, -1) + symbol
+                }
+                if (prevValue === '0') {
+                    return '0'
+                }
+                if (!prevValue.includes('(') && symbol === ')') {
+                    return prevValue
+                }
+            }
+
+            return prevValue + symbol;
         })
     } else if (symbol === '=') {
         try {
