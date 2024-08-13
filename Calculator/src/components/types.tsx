@@ -63,7 +63,7 @@ export const buttonsCreate = (rotate: boolean, setRotate: (rotate: boolean) => v
     {
         id: 8,
         icon: rotate ? '(' : <Multiplication className='w-5 h-5 fill-pink-300' />,
-        symbol: rotate ? '(' : 'X',
+        symbol: rotate ? '(' : '*',
         className: 'shadow-pink-500 text-pink-300 hover:shadow-pink-500',
     },
     {
@@ -137,7 +137,6 @@ export const buttonsCreate = (rotate: boolean, setRotate: (rotate: boolean) => v
         ),
         symbol: undefined,
         className: 'transition-all duration-500 ease-in-out hover:rotate-180 shadow-cyanGreen-500 shadow-sm hover:shadow-glow-sm text-cyanGreen-500 hover:shadow-cyanGreen-500',
-        onClick: () => setRotate(!rotate),
     },
     {
         id: 20,

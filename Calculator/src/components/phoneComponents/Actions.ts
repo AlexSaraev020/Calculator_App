@@ -4,7 +4,7 @@ interface CalculatorProps {
     setValue: (value: string | ((prevValue: string) => string)) => void;
 }
 
-const operations: string[] = ['%', '÷', '**', 'X', '-', '+', '.', '/']
+const operations: string[] = ['%', '÷', '**', '*', '-', '+', '.', '/']
 
 export const calculatorFunctionalities = ({ setValue, symbol, value }: CalculatorProps) => {
     if (!symbol) return;
@@ -51,22 +51,41 @@ export const calculatorFunctionalities = ({ setValue, symbol, value }: Calculato
     } else if (symbol === '(' || symbol === ')') {
         setValue((prevValue: string) => {
             const lastChar = prevValue.slice(-1)
+            const lastTwoChars = prevValue.slice(-2)
             if (symbol === '(') {
-                const indexOfPrev = prevValue.indexOf('(') - 1
+                const indexOfPrev = prevValue.lastIndexOf('(');
                 const valueOfIndexOfPrev = prevValue.charAt(indexOfPrev)
+                if(prevValue.includes('(')){
+                    return prevValue
+                }
+                if(lastChar === 'X'){
+                    return prevValue+symbol
+                }
+                
+                if (operations.includes(lastChar) || lastTwoChars === '**') {
+                    return prevValue;
+                }
 
                 if (!operations.includes(valueOfIndexOfPrev)) {
-                    return prevValue + 'X' + '(';
+                    console.log('sdafsa')
+                    if(lastTwoChars === '*('){
+                        return prevValue;
+                    }
+                    return prevValue + '*' + '(';
                 }
-                console.log(prevValue)
-                return prevValue + symbol;
+                
+                
             }
 
             if (symbol === ')') {
+                const indexOfPrev = prevValue.lastIndexOf(')');
+                const valueOfIndexOfPrev = prevValue.charAt(indexOfPrev)
+
+                if(prevValue.includes(')')){
+                    return prevValue
+                }
                 if (lastChar === '(' && symbol === ')') {
                     return prevValue
-                } else if (lastChar === '(' && symbol !== ')') {
-                    return prevValue.slice(0, -1) + symbol
                 }
                 if (prevValue === '0') {
                     return '0'
@@ -74,18 +93,20 @@ export const calculatorFunctionalities = ({ setValue, symbol, value }: Calculato
                 if (!prevValue.includes('(') && symbol === ')') {
                     return prevValue
                 }
+                if (!operations.includes(valueOfIndexOfPrev)) {
+                    console.log('sdafsa')
+                    if(lastTwoChars === '*('){
+                        return prevValue;
+                    }
+                    return prevValue + ')' + '*';
+                }
             }
 
             return prevValue + symbol;
         })
     } else if (symbol === '=') {
-        try {
-            const result = eval(value.replace('X', '*').replace('÷', '/'));
+            const result = eval(value);
             setValue(String(result));
-        } catch (error) {
-            console.error(error);
-            setValue('Error')
-        }
     } else {
         setValue((prevValue: string) =>
             prevValue === '0' && symbol !== '.' ? symbol : prevValue + symbol
