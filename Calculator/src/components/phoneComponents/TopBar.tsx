@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Signal from '../../assets/signal.svg?react'
 import WiFi from '../../assets/wifi.svg?react'
 import Battery from '../../assets/battery.svg?react'
