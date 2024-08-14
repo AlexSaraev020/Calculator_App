@@ -17,7 +17,6 @@ export const calculatorFunctionalities = ({ setValue, symbol, value }: Calculato
             const lastChar = prevValue.slice(-1);
             const lastTwoChars = prevValue.slice(-2)
             if (prevValue === '0' && symbol === '-') {
-
                 return '-';
             }
             if (symbol === '**') {
@@ -29,6 +28,9 @@ export const calculatorFunctionalities = ({ setValue, symbol, value }: Calculato
                 }
                 return prevValue + symbol;
             }
+            if (lastChar === '(' && symbol !== '-') {
+                return prevValue
+            }
 
             if (operations.includes(lastChar)) {
                 return prevValue.slice(0, -1) + symbol;
@@ -36,7 +38,7 @@ export const calculatorFunctionalities = ({ setValue, symbol, value }: Calculato
             return prevValue + symbol;
         });
     } else if (symbol === '√') {
-        setValue((prevValue) => {
+        setValue((prevValue:string) => {
             try {
                 const result = eval(prevValue.replace('X', '*').replace('÷', '/'));
                 if (result < 0) {
@@ -55,33 +57,35 @@ export const calculatorFunctionalities = ({ setValue, symbol, value }: Calculato
             if (symbol === '(') {
                 const indexOfPrev = prevValue.lastIndexOf('(');
                 const valueOfIndexOfPrev = prevValue.charAt(indexOfPrev)
-                if(prevValue.includes('(')){
+                if (prevValue.includes('(')) {
                     return prevValue
                 }
-                if(lastChar === 'X'){
-                    return prevValue+symbol
+                if (lastChar === 'X') {
+                    return prevValue + symbol
                 }
-                
+                if (lastChar === '.') {
+                    return prevValue
+                }
+
                 if (operations.includes(lastChar) || lastTwoChars === '**') {
-                    return prevValue;
+                    return prevValue + symbol;
                 }
 
                 if (!operations.includes(valueOfIndexOfPrev)) {
-                    console.log('sdafsa')
-                    if(lastTwoChars === '*('){
+                    if (lastTwoChars === '*(') {
                         return prevValue;
                     }
                     return prevValue + '*' + '(';
                 }
-                
-                
+
+
             }
 
             if (symbol === ')') {
                 const indexOfPrev = prevValue.lastIndexOf(')');
                 const valueOfIndexOfPrev = prevValue.charAt(indexOfPrev)
 
-                if(prevValue.includes(')')){
+                if (prevValue.includes(')')) {
                     return prevValue
                 }
                 if (lastChar === '(' && symbol === ')') {
@@ -95,18 +99,18 @@ export const calculatorFunctionalities = ({ setValue, symbol, value }: Calculato
                 }
                 if (!operations.includes(valueOfIndexOfPrev)) {
                     console.log('sdafsa')
-                    if(lastTwoChars === '*('){
+                    if (lastTwoChars === '*(') {
                         return prevValue;
                     }
-                    return prevValue + ')' + '*';
+                    return prevValue + symbol
                 }
             }
 
             return prevValue + symbol;
         })
-    } else if (symbol === '=') {
-            const result = eval(value);
-            setValue(String(result));
+    }else if (symbol === '=') {
+        const result = eval(value);
+        setValue(String(result));
     } else {
         setValue((prevValue: string) =>
             prevValue === '0' && symbol !== '.' ? symbol : prevValue + symbol

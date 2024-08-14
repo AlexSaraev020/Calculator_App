@@ -22,8 +22,7 @@ export const Calculator = () => {
                     <TopBar />
                     <div className="w-full h-full flex flex-col justify-end items-center">
                         <div className={`w-11/12 font-medium ${value.length > 14 ? 'text-2xl sm:text-4xl' : 'text-4xl sm:text-6xl'} py-1 px-2 flex justify-end text-white truncate rounded-md`}>
-                            {value.replace(/\*\(/g, 'X(').replace(/\*/g, 'X').replace(/\)\*/g, ')X')
-                            }
+                            {value}
                         </div>
                         <div className="bg-darkBlue-500 grid grid-cols-4 grid-rows-5 text-white h-[75%] w-full rounded-2xl place-items-center">
                             {buttons.map(button => (
