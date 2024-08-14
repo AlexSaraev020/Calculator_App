@@ -7,6 +7,7 @@ import Plus from '../assets/operations/plus.svg?react';
 import Equal from '../assets/operations/equal.svg?react';
 import Divide from '../assets/operations/divide.svg?react';
 import Percent from '../assets/operations/percent.svg?react';
+import Rotate from '../assets/rotate.svg?react';
 
 export interface ButtonsType {
     id: number;
@@ -132,7 +133,7 @@ export const buttonsCreate = (rotate: boolean, setRotate: (rotate: boolean) => v
             <button
                 onClick={() => setRotate(!rotate)}
             >
-                🗘
+                <Rotate className='w-8 h-8 stroke-cyanGreen-500' />
             </button>
         ),
         symbol: undefined,
